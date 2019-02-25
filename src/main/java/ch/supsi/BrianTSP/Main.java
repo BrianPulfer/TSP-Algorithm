@@ -12,10 +12,11 @@ public class Main {
         File file = new File(args[0]);
 
         TSPFile tspFile = new TSPFile(file);
+        System.out.println(tspFile.getName());
 
-        TSPAlgorithm algorithm = new BrianTSPAlgorithm();
-
-
-        System.out.println("Algorithm result is: ");
+        /*
+        TSPAlgorithm algorithm = new BrianTSPAlgorithm(30);
+        System.out.println("Algorithm result is: "+algorithm.compute(tspFile));
+        */
     }
 }
