@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class TSPFileTest {
     private TSPFile sut;
-    private final String filepath = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-BrianPulfer/src/main/resources/TestFile.tsp";
+    private final String filepath = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-BrianPulfer/src/main/resources/TestFile1.tsp";
 
 
     @Before

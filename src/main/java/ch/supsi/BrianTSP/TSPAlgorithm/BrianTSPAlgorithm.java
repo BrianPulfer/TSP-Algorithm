@@ -2,9 +2,11 @@ package ch.supsi.BrianTSP.TSPAlgorithm;
 
 import ch.supsi.BrianTSP.City;
 import ch.supsi.BrianTSP.TSPFile;
-
 import java.util.ArrayList;
 
+
+/*Idea contorta di soluzione dove si prendono i nodi più lontani e si percorre il grafo senza mai tornare dietro
+  rispetto alla linea tracciata congiungendo i due nodi più lontani. */
 public class BrianTSPAlgorithm implements TSPAlgorithm {
 
     private Point directional_vector;

@@ -13,7 +13,7 @@ public class BrianTSPAlgorithmTest {
     private BrianTSPAlgorithm sut;
     private double scanner_width = 10/100;
     private TSPFile testfile;
-    private String testfile_path = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-BrianPulfer/src/main/resources/TestFile.tsp";;
+    private String testfile_path = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-BrianPulfer/src/main/resources/TestFile1.tsp";;
 
     @Before
     public void init(){
