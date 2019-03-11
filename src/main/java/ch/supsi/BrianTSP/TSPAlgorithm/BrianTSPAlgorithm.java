@@ -3,6 +3,7 @@ package ch.supsi.BrianTSP.TSPAlgorithm;
 import ch.supsi.BrianTSP.City;
 import ch.supsi.BrianTSP.TSPFile;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /*Idea contorta di soluzione dove si prendono i nodi più lontani e si percorre il grafo senza mai tornare dietro
@@ -71,8 +72,8 @@ public class BrianTSPAlgorithm implements TSPAlgorithm {
     }
 
 
-    public City[] citiesFinalOrder() {
-        return (City[]) ordered_cities.toArray();
+    public List<City> citiesFinalOrder() {
+        return ordered_cities;
     }
 
     private class Point{

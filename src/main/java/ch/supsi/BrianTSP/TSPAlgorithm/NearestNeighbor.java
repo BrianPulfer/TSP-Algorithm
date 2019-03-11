@@ -27,15 +27,7 @@ public class NearestNeighbor implements TSPAlgorithm{
             currentCity = nextCity;
         }
 
-        int totaldistance = 0;
-
-        for(int i = 0; i<ordered.size(); i++){
-            if(i+1 < ordered.size())
-                totaldistance += ordered.get(i).getDistanceFrom(ordered.get(i+1));
-        }
-        totaldistance += ordered.get(ordered.size()-1).getDistanceFrom(ordered.get(0));
-
-        return totaldistance;
+        return TSPUtilities.totalLength(ordered);
     }
 
     private City findClosest(City city, List<City> cities) {
@@ -59,7 +51,7 @@ public class NearestNeighbor implements TSPAlgorithm{
         return cities.get(current_closest_index);
     }
 
-    public City[] citiesFinalOrder() {
-        return (City[]) ordered.toArray();
+    public List<City> citiesFinalOrder() {
+        return ordered;
     }
 }

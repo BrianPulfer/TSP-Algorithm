@@ -39,7 +39,7 @@ public class BrianTSPAlgorithmTest {
         sut.compute(testfile);
 
         assertTrue(sut.citiesFinalOrder() != null);
-        assertTrue(sut.citiesFinalOrder().length == testfile.getCities().length);
+        assertTrue(sut.citiesFinalOrder().size() == testfile.getCities().length);
         assertTrue(sut.getTotalDistance() > 0);
     }
 }
