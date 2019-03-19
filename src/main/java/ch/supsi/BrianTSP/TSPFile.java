@@ -39,6 +39,12 @@ public class TSPFile {
             int index = 0;
 
             while(!(current_line = br.readLine()).equals("EOF")){
+
+                //Allowing .tsp files to have a white-space before city ID.
+                if(current_line.toCharArray()[0] == ' '){
+                    current_line = new StringBuffer(current_line).deleteCharAt(0).toString();
+                }
+
                 String id_lat_lon[] = current_line.split(" ");
 
                 int id = Integer.parseInt(id_lat_lon[0]);

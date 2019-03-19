@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.List;
 
 public class Main {
-    private static final String test_file_path = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-Algorithm/src/main/resources/TestFile1.tsp";
+    private static final String test_file_path = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-Algorithm/src/main/resources/TestFile2.tsp";
 
 
     public static void main(String[] args){
