@@ -3,8 +3,7 @@ package ch.supsi.BrianTSP.TSPOptimizations;
 import ch.supsi.BrianTSP.City;
 import ch.supsi.BrianTSP.TSPAlgorithm.TSPUtilities;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TwoOpt extends TSPOptimization {
 
@@ -14,40 +13,74 @@ public class TwoOpt extends TSPOptimization {
 
     public void optimize() {
         List<City> test = start;
-        List<City> tempTest;
         optimization = start;
 
         int minimumDistance = TSPUtilities.totalLength(test);
 
-        for(int i = 0; i < start.size(); i++){
-            for(int j = i+1; j<start.size(); j++){
-                tempTest = test;
-                test = swap(test, i, j);
+        boolean optimized;
 
-                if(TSPUtilities.totalLength(test) < minimumDistance){
-                    minimumDistance = TSPUtilities.totalLength(test);
-                    optimization = test;
-                } else {
-                    test = tempTest;
+        do {
+            optimized = false;
+            for (int i = 0; i < start.size(); i++) {
+                for (int j = i + 1; j < start.size(); j++) {
+                    test = start;
+
+                    HashMap<Integer, ArrayList<City>> step = swap(test, i, j);
+
+                    int newLenght = (Integer) step.keySet().toArray()[0];
+                    test = step.get(newLenght);
+
+                    if (newLenght < minimumDistance) {
+                        minimumDistance = TSPUtilities.totalLength(test);
+                        optimization = test;
+                        optimized = true;
+                    }
                 }
             }
 
-        }
+            if(optimized){
+                start = optimization;
+            }
+
+        } while(optimized);
     }
 
-    private List<City> swap(List<City> test, int i, int j) {
-        List<City> retval = new ArrayList<City>();
+    private HashMap<Integer, ArrayList<City>> swap(List<City> test, int i, int j) {
+        ArrayList<City> newTrip = new ArrayList<City>();
 
-        for(int k = 0; k<test.size(); k++){
-            if(k == i) {
-                retval.add(test.get(j));
-            } else if(k == j) {
-                retval.add(test.get(i));
+        //i is always the lower bound.
+        if(i>j){
+            int t = i;
+            i = j;
+            j = t;
+        }
+
+        int temp = 1;
+        int newTripLenght = 0;
+
+        for(int k = 0; k < test.size(); k++){
+            if(k==i){
+                newTrip.add(test.get(j));
+            } else if (k == j){
+                newTrip.add(test.get(i));
+            } else if(k<i || k>j){
+                newTrip.add(test.get(k));
             } else {
-                retval.add(test.get(k));
+                newTrip.add(test.get( j - temp));
+                temp++;
+            }
+
+            if(k != 0){
+                newTripLenght += newTrip.get(newTrip.size()-2).getDistanceFrom(newTrip.get(newTrip.size()-1));
+            }
+
+            if(k == test.size()-1){
+                newTripLenght += newTrip.get(newTrip.size()-1).getDistanceFrom(newTrip.get(0));
             }
         }
 
+        HashMap<Integer, ArrayList<City>> retval = new HashMap<Integer, ArrayList<City>>();
+        retval.put(newTripLenght, newTrip);
         return retval;
     }
 }
