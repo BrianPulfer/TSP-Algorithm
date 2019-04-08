@@ -3,15 +3,12 @@ package ch.supsi.BrianTSP.TSPOptimizations;
 import ch.supsi.BrianTSP.City;
 import ch.supsi.BrianTSP.TSPAlgorithm.TSPUtilities;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class SimulatedAnnealing extends TSPOptimization {
 
     private double temperature = 100;
     private double endTime;
-    private double slack = 20;
 
     private List<City> currentSolution;
     private List<City> bestSolution;
@@ -27,35 +24,38 @@ public class SimulatedAnnealing extends TSPOptimization {
         endTime = System.currentTimeMillis() + min*60*1000 + seconds*1000;
     }
 
+
     public void optimize() {
         DoubleBridge db = new DoubleBridge();
 
-        List<City> localOptimization = new ArrayList<City>();
+        int currentLenght = TSPUtilities.totalLength(currentSolution);
 
-        while (System.currentTimeMillis() + slack < endTime){
-            localOptimization = db.swapRandomly(currentSolution);
+        while (System.currentTimeMillis() < endTime){
 
-            TwoOpt twoOpt = new TwoOpt(localOptimization);
+            TwoOpt twoOpt = new TwoOpt(db.swapRandomly(currentSolution));
             twoOpt.optimize();
 
             int newLenght = TSPUtilities.totalLength(twoOpt.getOptimization());
-            int currentLenght = TSPUtilities.totalLength(currentSolution);
 
             if(newLenght < currentLenght){
-                currentSolution = twoOpt.optimization;
+                currentSolution = twoOpt.getOptimization();
+                currentLenght = newLenght;
 
                 if(newLenght < bestSolutionLenght){
                     bestSolutionLenght = newLenght;
                     bestSolution = twoOpt.getOptimization();
+                    System.out.println("New best found! Score = "+bestSolutionLenght);
                 }
             } else {
-                double error = (newLenght - currentLenght)/ currentLenght;
-                if(getProbability(error) > Math.random()){
+                double error = (newLenght - currentLenght);
+                if(getProbability(error) > Math.random()){      //error = 0 -> Always same solution!
                     currentSolution = twoOpt.getOptimization();
                 }
             }
         }
 
+
+        System.out.println("Optimization finished");
         this.optimization = bestSolution;
     }
 
@@ -64,7 +64,7 @@ public class SimulatedAnnealing extends TSPOptimization {
     private void randomSimulatedAnnealing(){
         int left, right;
 
-        while(System.currentTimeMillis() + slack < endTime){
+        while(System.currentTimeMillis() < endTime){
             do {
                 left = (int) (Math.random() * currentSolution.size());
                 right = (int) (Math.random() * currentSolution.size());
@@ -92,7 +92,7 @@ public class SimulatedAnnealing extends TSPOptimization {
     }
 
     private double getProbability(double error){
-        temperature = temperature * 0.95;
+        temperature *= 0.95;
         return Math.pow(Math.E, (-error / temperature));  // e^^(-DE/T)
     }
 
@@ -102,16 +102,48 @@ public class SimulatedAnnealing extends TSPOptimization {
 
             int[] citiesToSwap = new int[4];
 
-            //TODO: Verify you don't have the same city twice.
-            for(int i = 0; i<citiesToSwap.length; i++)
-                citiesToSwap[i] = (int) (Math.random() * cities.size());
 
+            while(!allDiffer(citiesToSwap, 4)) {
+                for (int i = 0; i < citiesToSwap.length; i++)
+                    citiesToSwap[i] = (int) (Math.random() * cities.size());
+            }
             Arrays.sort(citiesToSwap);
 
-            retval = TSPUtilities.swap(cities, citiesToSwap[0], citiesToSwap[2]);
-            retval = TSPUtilities.swap(retval, citiesToSwap[1], citiesToSwap[3]);
+
+            int temp = 0;
+
+            for(int i = 0; i<cities.size(); i++){
+                if(temp == citiesToSwap[0]){
+                    temp = citiesToSwap[2] ;
+                } else if (temp == citiesToSwap[1]){
+                    temp = citiesToSwap[3] ;
+                } else if(temp == citiesToSwap[2]){
+                    temp = citiesToSwap[0] ;
+                } else if (temp == citiesToSwap[3]){
+                    temp = citiesToSwap[1] ;
+                }
+
+                if(temp+1 == cities.size()) {
+                    temp = 0;
+                } else {
+                    temp++;
+                }
+
+                retval.add(cities.get(temp));
+            }
 
             return retval;
+        }
+
+        private boolean allDiffer(int[] citiesToSwap, int size) {
+            for(int i = 0; i<size; i++){
+                for(int j = i+1; j<size; j++){
+                    if(citiesToSwap[i] == citiesToSwap[j])
+                        return false;
+                }
+            }
+
+            return true;
         }
     }
 }

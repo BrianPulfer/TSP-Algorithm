@@ -5,13 +5,15 @@ import ch.supsi.BrianTSP.TSPAlgorithm.TSPAlgorithm;
 import ch.supsi.BrianTSP.TSPAlgorithm.TSPUtilities;
 import ch.supsi.BrianTSP.TSPOptimizations.SimulatedAnnealing;
 import ch.supsi.BrianTSP.TSPOptimizations.TSPOptimization;
+import ch.supsi.BrianTSP.TSPOptimizations.TabuSearch;
 import ch.supsi.BrianTSP.TSPOptimizations.TwoOpt;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
 
 public class Main {
-    private static final String test_file_path = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-Algorithm/src/main/resources/TestFile1.tsp";
+    private static final String test_file_path = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-Algorithm/src/main/resources/TestFile3.tsp";
 
 
     public static void main(String[] args){
@@ -33,17 +35,28 @@ public class Main {
         /*
         TSPOptimization optimization = new TwoOpt(algorithm.citiesFinalOrder());
         optimization.optimize();
-
-        result = TSPUtilities.totalLength(optimization.getOptimization());
-
-        printStats(optimization.getClass().getSimpleName(), result, tspFile.getBest());
-
-        printFoundPath(algorithm.citiesFinalOrder());
         */
-        SimulatedAnnealing sa = new SimulatedAnnealing(algorithm.citiesFinalOrder(), 0, 10);
-        sa.optimize();
 
-        printStats(sa.getClass().getSimpleName(),TSPUtilities.totalLength(sa.getOptimization()),tspFile.getBest());
+        TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), 0, 10);
+        optimization.optimize();
+
+
+        /*
+        TabuSearch optimization = new TabuSearch(algorithm.citiesFinalOrder(),0,55);
+        optimization.optimize();
+        */
+
+        printStats(optimization.getClass().getSimpleName(),TSPUtilities.totalLength(optimization.getOptimization()),tspFile.getBest());
+        printPathValidity(optimization.getOptimization(), tspFile);
+        //printFoundPath(optimization.getOptimization());
+    }
+
+    private static void printPathValidity(List<City> optimization, TSPFile tspFile) {
+        if (new HashSet<City>(optimization).size() == tspFile.getDimension()) {
+            System.out.println("Path is valid.");
+        } else {
+            System.out.println("Path is invalid.");
+        }
     }
 
     private static void printFoundPath(List<City> sorted) {

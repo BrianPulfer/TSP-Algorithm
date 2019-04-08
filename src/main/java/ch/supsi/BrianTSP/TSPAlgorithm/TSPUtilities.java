@@ -44,13 +44,14 @@ public class TSPUtilities {
             afterSecondSwap = test.get(1);
         }
 
+
         int oldDistance = beforeFirstSwap.getDistanceFrom(firstSwap) + secondSwap.getDistanceFrom(afterSecondSwap);
         int newDistance = beforeFirstSwap.getDistanceFrom(secondSwap) + firstSwap.getDistanceFrom(afterSecondSwap);
 
         return (newDistance - oldDistance);
     }
 
-    public static ArrayList<City> swap(List<City> test, int i, int j) {
+    public static List<City> swap(List<City> test, int i, int j) {
         ArrayList<City> newTrip = new ArrayList<City>();
 
         //i is always the lower bound.
@@ -77,5 +78,12 @@ public class TSPUtilities {
 
 
         return newTrip;
+    }
+
+    public static List<City> randomSwap(List<City> cities){
+        int i = (int) (Math.random() * cities.size());
+        int j = (int) (Math.random() * cities.size());
+
+        return swap(cities, i, j);
     }
 }
