@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Main {
-    private static final String test_file_path = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-Algorithm/src/main/resources/TestFile3.tsp";
+    private static final String test_file_path = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-Algorithm/src/main/resources/fl1577.tsp";
 
 
     public static void main(String[] args){
