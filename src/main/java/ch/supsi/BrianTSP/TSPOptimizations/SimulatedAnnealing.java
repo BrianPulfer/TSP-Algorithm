@@ -80,7 +80,7 @@ public class SimulatedAnnealing extends TSPOptimization {
                 if(newLenght < bestSolutionLenght){
                     bestSolutionLenght = newLenght;
                     bestSolution = twoOpt.getOptimization();
-                    System.out.println("New best found! Score = "+bestSolutionLenght);
+                    //System.out.println("New best found! Score = "+bestSolutionLenght);
                 }
             } else {
                 double error = (newLenght - currentLenght);

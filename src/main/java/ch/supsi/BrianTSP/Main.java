@@ -11,6 +11,9 @@ import ch.supsi.BrianTSP.TSPOptimizations.TabuSearch;
 import ch.supsi.BrianTSP.TSPOptimizations.TwoOpt;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -23,32 +26,62 @@ public class Main {
         double errorsSum = 0;
         int tests = 10;
 
-        for(int i = tests-1; i>=0; i--) {
+        double minimumError = 100;
 
-            //TODO: Pass arg[0] when program is complete
-            File file = new File(test_file_path+i+".tsp");
+        while(true) {
+            errorsSum = 0;
+            for (int i = tests - 1; i >= 0; i--) {
 
-            TSPFile tspFile = new TSPFile(file);
-            System.out.println("File opened: " + tspFile.getName()+"\nBest known: "+tspFile.getBest());
+                //TODO: Pass arg[0] when program is complete
+                File file = new File(test_file_path + i + ".tsp");
 
-            TSPAlgorithm algorithm = new NearestNeighbor();
-            algorithm.compute(tspFile);
+                TSPFile tspFile = new TSPFile(file);
+                //System.out.println("File opened: " + tspFile.getName() + "\nBest known: " + tspFile.getBest());
 
-            //Prim prim = new Prim(algorithm.citiesFinalOrder());
+                TSPAlgorithm algorithm = new NearestNeighbor();
+                algorithm.compute(tspFile);
 
-            TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), /*prim,*/0 , 10);
-            optimization.optimize();
+                //Prim prim = new Prim(algorithm.citiesFinalOrder());
+
+                TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), /*prim,*/0, 1);
+                optimization.optimize();
 
 
-            printStats(optimization.getClass().getSimpleName(),TSPUtilities.totalLength(optimization.getOptimization()),tspFile.getBest());
-            printPathValidity(optimization.getOptimization(), tspFile);
-            //printFoundPath(optimization.getOptimization());
-            printBlankSpaces();
+                //printStats(optimization.getClass().getSimpleName(), TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
+                //printPathValidity(optimization.getOptimization(), tspFile);
+                //printFoundPath(optimization.getOptimization());
+                //printBlankSpaces();
 
-            errorsSum += getError(TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
+                errorsSum += getError(TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
 
+            }
+            double errPercentage = errorsSum / tests;
+            System.out.println("Error average in percentage: " + errorsSum / tests);
+
+            if(minimumError > errPercentage){
+                minimumError = errPercentage;
+                System.out.println("BEST SEED: "+TSPUtilities.getSeed());
+                writeSeedToFile(TSPUtilities.getSeed(), minimumError);
+            }
         }
-        System.out.println("Error average in percentage: "+errorsSum/tests);
+
+    }
+
+    private static void writeSeedToFile(long seed, double error){
+        try {
+            File file = new File("Seeds.txt");
+
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(("Seed: "+seed+"    Error: "+error+"\n").getBytes());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static void printBlankSpaces() {

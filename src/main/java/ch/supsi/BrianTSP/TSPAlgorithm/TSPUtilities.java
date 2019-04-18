@@ -9,7 +9,8 @@ import java.util.Random;
 public class TSPUtilities {
 
     //private static long seed = 1557753992;
-    private static long seed = 1782757382;
+    //private static long seed = 1782757382;
+    private static long seed = System.currentTimeMillis();
 
     private static final Random random = new Random(seed);
 
