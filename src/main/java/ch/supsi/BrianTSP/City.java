@@ -34,4 +34,14 @@ public class City {
     public void setLon(double lon) {
         this.lon = lon;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof City){
+            if(((City) o).getId() == this.getId())
+                return true;
+        }
+
+        return false;
+    }
 }

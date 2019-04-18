@@ -1,6 +1,8 @@
 package ch.supsi.BrianTSP.TSPOptimizations;
 
 import ch.supsi.BrianTSP.City;
+import ch.supsi.BrianTSP.MST.Arch;
+import ch.supsi.BrianTSP.MST.Prim;
 import ch.supsi.BrianTSP.TSPAlgorithm.TSPUtilities;
 
 import java.util.*;
@@ -8,10 +10,16 @@ import java.util.*;
 public class SimulatedAnnealing extends TSPOptimization {
 
     private double temperature = 100;
+    private double startTime;
     private double endTime;
 
     private List<City> currentSolution;
     private List<City> bestSolution;
+
+    private Prim prim = null;
+    private City[][] closestCitiesMatrix = null;
+
+    private Random random;
 
     private int bestSolutionLenght;
 
@@ -21,18 +29,46 @@ public class SimulatedAnnealing extends TSPOptimization {
         bestSolution = currentSolution;
         bestSolutionLenght = TSPUtilities.totalLength(bestSolution);
 
+        startTime = System.currentTimeMillis();
         endTime = System.currentTimeMillis() + min*60*1000 + seconds*1000;
+
+        this.random = TSPUtilities.getRandom();
+    }
+
+    public SimulatedAnnealing(List<City> start, Prim prim, int min, int seconds) {
+        super(start);
+        currentSolution = start;
+        bestSolution = currentSolution;
+        bestSolutionLenght = TSPUtilities.totalLength(bestSolution);
+
+        startTime = System.currentTimeMillis();
+        endTime = System.currentTimeMillis() + min*60*1000 + seconds*1000;
+
+        this.random = TSPUtilities.getRandom();
+        this.prim = prim;
+        this.prim.find();
+        this.closestCitiesMatrix = TSPUtilities.getMinDistances(start,16);
     }
 
 
     public void optimize() {
         DoubleBridge db = new DoubleBridge();
 
+        //City[][] minDistances = TSPUtilities.getMinDistances(start, 15);
+
         int currentLenght = TSPUtilities.totalLength(currentSolution);
+
 
         while (System.currentTimeMillis() < endTime){
 
-            TwoOpt twoOpt = new TwoOpt(db.swapRandomly(currentSolution));
+            TwoOpt twoOpt;
+
+            if(this.prim == null) {
+                twoOpt = new TwoOpt(db.swapRandomly(currentSolution));
+            } else{
+                twoOpt = new TwoOpt(db.swapRandomly(currentSolution), this.closestCitiesMatrix, this.prim);
+            }
+
             twoOpt.optimize();
 
             int newLenght = TSPUtilities.totalLength(twoOpt.getOptimization());
@@ -48,14 +84,13 @@ public class SimulatedAnnealing extends TSPOptimization {
                 }
             } else {
                 double error = (newLenght - currentLenght);
-                if(getProbability(error) > Math.random()){      //error = 0 -> Always same solution!
+                if(getProbability(error) > random.nextDouble()){      //error = 0 -> Always same solution!
                     currentSolution = twoOpt.getOptimization();
                 }
             }
         }
 
 
-        System.out.println("Optimization finished");
         this.optimization = bestSolution;
     }
 
@@ -66,8 +101,8 @@ public class SimulatedAnnealing extends TSPOptimization {
 
         while(System.currentTimeMillis() < endTime){
             do {
-                left = (int) (Math.random() * currentSolution.size());
-                right = (int) (Math.random() * currentSolution.size());
+                left = (int) (this.random.nextDouble() * currentSolution.size());
+                right = (int) (random.nextDouble() * currentSolution.size());
             } while (left == right);
 
             int deltaError = TSPUtilities.testSwap(currentSolution, left, right);
@@ -82,7 +117,7 @@ public class SimulatedAnnealing extends TSPOptimization {
                     this.bestSolution = currentSolution;
                 }
             } else {
-                if(getProbability(deltaError) > Math.random()){
+                if(getProbability(deltaError) > random.nextDouble()){
                     currentSolution = TSPUtilities.swap(currentSolution, left, right);
                 }
             }
@@ -92,11 +127,16 @@ public class SimulatedAnnealing extends TSPOptimization {
     }
 
     private double getProbability(double error){
-        temperature *= 0.95;
+        temperature = ((endTime - System.currentTimeMillis()) / (endTime - startTime));
         return Math.pow(Math.E, (-error / temperature));  // e^^(-DE/T)
     }
 
     private class DoubleBridge{
+        private Random random;
+        public DoubleBridge(){
+            this.random = TSPUtilities.getRandom();
+        }
+
         public List<City> swapRandomly(List<City> cities){
             ArrayList<City> retval = new ArrayList<City>();
 
@@ -105,7 +145,7 @@ public class SimulatedAnnealing extends TSPOptimization {
 
             while(!allDiffer(citiesToSwap, 4)) {
                 for (int i = 0; i < citiesToSwap.length; i++)
-                    citiesToSwap[i] = (int) (Math.random() * cities.size());
+                    citiesToSwap[i] = (int) (random.nextDouble() * cities.size());
             }
             Arrays.sort(citiesToSwap);
 
