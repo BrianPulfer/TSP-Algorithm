@@ -18,54 +18,35 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Main {
-    private static final String test_file_path = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-Algorithm/src/main/resources/";
-
 
     public static void main(String[] args){
 
-        double errorsSum = 0;
-        int tests = 10;
+        File file = new File(args[0]);
 
-        double minimumError = 100;
-
-        while(true) {
-            errorsSum = 0;
-            for (int i = tests - 1; i >= 0; i--) {
-
-                //TODO: Pass arg[0] when program is complete
-                File file = new File(test_file_path + i + ".tsp");
-
-                TSPFile tspFile = new TSPFile(file);
-                //System.out.println("File opened: " + tspFile.getName() + "\nBest known: " + tspFile.getBest());
-
-                TSPAlgorithm algorithm = new NearestNeighbor();
-                algorithm.compute(tspFile);
-
-                //Prim prim = new Prim(algorithm.citiesFinalOrder());
-
-                TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), /*prim,*/0, 1);
-                optimization.optimize();
-
-
-                //printStats(optimization.getClass().getSimpleName(), TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
-                //printPathValidity(optimization.getOptimization(), tspFile);
-                //printFoundPath(optimization.getOptimization());
-                //printBlankSpaces();
-
-                errorsSum += getError(TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
-
-            }
-            double errPercentage = errorsSum / tests;
-            System.out.println("Error average in percentage: " + errorsSum / tests);
-
-            if(minimumError > errPercentage){
-                minimumError = errPercentage;
-                System.out.println("BEST SEED: "+TSPUtilities.getSeed());
-                writeSeedToFile(TSPUtilities.getSeed(), minimumError);
-            }
+        if(!file.exists()){
+            System.out.println("Could not open file "+args[0]);
+            return;
         }
 
+        TSPFile tspFile = new TSPFile(file);
+        //System.out.println("File opened: " + tspFile.getName() + "\nBest known: " + tspFile.getBest());
+
+        TSPAlgorithm algorithm = new NearestNeighbor();
+        algorithm.compute(tspFile);
+
+        //Prim prim = new Prim(algorithm.citiesFinalOrder());
+
+        TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), 0, 3);
+        optimization.optimize();
+
+        //printStats(optimization.getClass().getSimpleName(), TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
+        //printPathValidity(optimization.getOptimization(), tspFile);
+        //printFoundPath(optimization.getOptimization());
+        //printBlankSpaces();
+
+        TSPUtilities.writeSolutionToFile(tspFile, optimization.getOptimization());
     }
+
 
     private static void writeSeedToFile(long seed, double error){
         try {

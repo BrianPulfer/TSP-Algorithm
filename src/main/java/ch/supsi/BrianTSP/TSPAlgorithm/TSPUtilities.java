@@ -1,7 +1,11 @@
 package ch.supsi.BrianTSP.TSPAlgorithm;
 
 import ch.supsi.BrianTSP.City;
+import ch.supsi.BrianTSP.TSPFile;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -178,5 +182,31 @@ public class TSPUtilities {
         }
 
         return retval;
+    }
+
+    public static void writeSolutionToFile(TSPFile tspFile, List<City> solution) {
+        String solutionFilePath = tspFile.getFilePath().split("\\.")[0]+".opt.tour";
+
+        File solutionFile = new File(solutionFilePath);
+
+        try {
+            if (!solutionFile.exists())
+                solutionFile.createNewFile();
+            FileWriter fw = new FileWriter(solutionFile);
+            fw.write("NAME : " + tspFile.getName() + ".opt.tour\n");
+            fw.write("COMMENT : Brian Pulfer optimization for file " + tspFile.getName() + ".tsp\n");
+            fw.write("TYPE : TOUR\n");
+            fw.write("DIMENSION : " + solution.size() + "\n");
+            fw.write("TOUR_SECTION\n");
+
+            for (City c : solution) {
+                fw.write(c.getId() + "\n");
+            }
+
+            fw.write("-1\nEOF");
+            fw.close();
+        } catch (IOException ioe){
+            ioe.printStackTrace();
+        }
     }
 }

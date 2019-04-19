@@ -4,6 +4,7 @@ import java.io.*;
 
 public class TSPFile {
 
+    private String filePath;
     private String name;
     private String type;
     private String comment;
@@ -16,6 +17,7 @@ public class TSPFile {
         if(!file.exists())
             throw new RuntimeException("File does not exist. Could not read.");
 
+        this.filePath = file.getPath();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String current_line;
@@ -118,5 +120,13 @@ public class TSPFile {
 
     public void setCities(City[] cities) {
         this.cities = cities;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }
