@@ -34,7 +34,7 @@ public class Main {
 
             //Prim prim = new Prim(algorithm.citiesFinalOrder());
 
-            TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), /*prim,*/0, 3);
+            TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), /*prim,*/2, 55);
             optimization.optimize();
 
 
