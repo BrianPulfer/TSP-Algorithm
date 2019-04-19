@@ -8,11 +8,10 @@ import java.util.Random;
 
 public class TSPUtilities {
 
-    //private static long seed = 1557753992;
-    //private static long seed = 1782757382;
-    private static long seed = System.currentTimeMillis();
+    private static long seed = 438278795; //Buono
+    //private static long seed = 0;
 
-    private static final Random random = new Random(seed);
+    private static Random random;
 
     public static int totalLength(List<City> cities) {
         int retval = 0;
@@ -140,7 +139,15 @@ public class TSPUtilities {
     }
 
     public static Random getRandom() {
+        if(random == null){
+            seed = (long) (Math.random()*999999999);
+            random = new Random(seed);
+        }
         return random;
+    }
+
+    public static void setRandom(Random random){
+        TSPUtilities.random = random;
     }
 
     public static long getSeed() {

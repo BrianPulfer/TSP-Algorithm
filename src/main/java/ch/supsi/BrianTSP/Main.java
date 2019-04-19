@@ -18,53 +18,42 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Main {
-    private static final String test_file_path = "/Users/brianpulfer21/Desktop/Semestre Primaverile/Algoritmi avanzati/Coppa Algoritmi/TSP-Algorithm/src/main/resources/";
-
-
+    private static final String test_file_path = "C:\\Users\\pulfe\\Desktop\\Semstre 5 - Progetti\\TSP-Algorithm\\src\\main\\resources\\0.tsp";
     public static void main(String[] args){
-
-        double errorsSum = 0;
-        int tests = 10;
 
         double minimumError = 100;
 
         while(true) {
-            errorsSum = 0;
-            for (int i = tests - 1; i >= 0; i--) {
+            File file = new File(test_file_path);
 
-                //TODO: Pass arg[0] when program is complete
-                File file = new File(test_file_path + i + ".tsp");
+            TSPFile tspFile = new TSPFile(file);
+            //System.out.println("File opened: " + tspFile.getName() + "\nBest known: " + tspFile.getBest());
 
-                TSPFile tspFile = new TSPFile(file);
-                //System.out.println("File opened: " + tspFile.getName() + "\nBest known: " + tspFile.getBest());
+            TSPAlgorithm algorithm = new NearestNeighbor();
+            algorithm.compute(tspFile);
 
-                TSPAlgorithm algorithm = new NearestNeighbor();
-                algorithm.compute(tspFile);
+            //Prim prim = new Prim(algorithm.citiesFinalOrder());
 
-                //Prim prim = new Prim(algorithm.citiesFinalOrder());
-
-                TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), /*prim,*/0, 1);
-                optimization.optimize();
+            TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), /*prim,*/0, 3);
+            optimization.optimize();
 
 
-                //printStats(optimization.getClass().getSimpleName(), TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
-                //printPathValidity(optimization.getOptimization(), tspFile);
-                //printFoundPath(optimization.getOptimization());
-                //printBlankSpaces();
+            //printStats(optimization.getClass().getSimpleName(), TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
+            //printPathValidity(optimization.getOptimization(), tspFile);
+            //printFoundPath(optimization.getOptimization());
+            //printBlankSpaces();
 
-                errorsSum += getError(TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
+            double error = getError(TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
+            System.out.println("Error with seed "+TSPUtilities.getSeed()+": "+error);
 
-            }
-            double errPercentage = errorsSum / tests;
-            System.out.println("Error average in percentage: " + errorsSum / tests);
-
-            if(minimumError > errPercentage){
-                minimumError = errPercentage;
-                System.out.println("BEST SEED: "+TSPUtilities.getSeed());
+            if(minimumError > error){
+                minimumError = error;
+                System.out.println("            BEST SEED: "+TSPUtilities.getSeed()+"\n");
                 writeSeedToFile(TSPUtilities.getSeed(), minimumError);
             }
-        }
 
+            TSPUtilities.setRandom(null);
+        }
     }
 
     private static void writeSeedToFile(long seed, double error){
