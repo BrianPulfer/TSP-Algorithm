@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Main {
-    private static final String test_file_path = "C:\\Users\\pulfe\\Desktop\\Semstre 5 - Progetti\\TSP-Algorithm\\src\\main\\resources\\0.tsp";
+    private static final String test_file_path = ".\\src\\main\\resources\\0.tsp";
     public static void main(String[] args){
 
         double minimumError = 100;
