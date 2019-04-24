@@ -56,7 +56,7 @@ public class SimulatedAnnealing extends TSPOptimization {
 
         //City[][] minDistances = TSPUtilities.getMinDistances(start, 15);
 
-        int currentLenght = TSPUtilities.totalLength(currentSolution);
+        int currentLenght = this.bestSolutionLenght;
 
 
         while (System.currentTimeMillis() < endTime){

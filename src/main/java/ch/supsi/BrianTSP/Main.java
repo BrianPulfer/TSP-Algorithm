@@ -29,7 +29,7 @@ public class Main {
         }
 
         TSPFile tspFile = new TSPFile(file);
-        //System.out.println("File opened: " + tspFile.getName() + "\nBest known: " + tspFile.getBest());
+        System.out.println("File opened: " + tspFile.getName() + "\nBest known: " + tspFile.getBest());
 
         TSPAlgorithm algorithm = new NearestNeighbor();
         algorithm.compute(tspFile);
@@ -39,12 +39,12 @@ public class Main {
         TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), 0, 3);
         optimization.optimize();
 
-        //printStats(optimization.getClass().getSimpleName(), TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
+        printStats(optimization.getClass().getSimpleName(), TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
         //printPathValidity(optimization.getOptimization(), tspFile);
         //printFoundPath(optimization.getOptimization());
         //printBlankSpaces();
 
-        TSPUtilities.writeSolutionToFile(tspFile, optimization.getOptimization());
+        //TSPUtilities.writeSolutionToFile(tspFile, optimization.getOptimization());
     }
 
 
