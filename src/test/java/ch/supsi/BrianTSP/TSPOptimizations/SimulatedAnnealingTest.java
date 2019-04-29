@@ -1,6 +1,7 @@
 package ch.supsi.BrianTSP.TSPOptimizations;
 
 import ch.supsi.BrianTSP.City;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class SimulatedAnnealingTest {
         return retval;
     }
 
+    @Ignore
     @Test
     public void doubleBridgeSwapMockTest(){
         List<Integer> cities = Arrays.asList(1,2,3,4,5,6,7,8);
