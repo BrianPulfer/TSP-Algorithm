@@ -36,15 +36,15 @@ public class Main {
 
         //Prim prim = new Prim(algorithm.citiesFinalOrder());
 
-        TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), 0, 3);
+        TSPOptimization optimization = new SimulatedAnnealing(algorithm.citiesFinalOrder(), 2, 55);
         optimization.optimize();
 
-        printStats(optimization.getClass().getSimpleName(), TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
+        //printStats(optimization.getClass().getSimpleName(), TSPUtilities.totalLength(optimization.getOptimization()), tspFile.getBest());
         //printPathValidity(optimization.getOptimization(), tspFile);
         //printFoundPath(optimization.getOptimization());
         //printBlankSpaces();
 
-        //TSPUtilities.writeSolutionToFile(tspFile, optimization.getOptimization());
+        TSPUtilities.writeSolutionToFile(tspFile, optimization.getOptimization());
     }
 
 
